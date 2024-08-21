@@ -1,0 +1,117 @@
+<plugin id="com-outsystems-uaepass" version="1.0.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>UAEPass</name>
+
+    <js-module name="uaepass" src="www/uaepass.js">
+        <clobbers target="UAEPass" />
+    </js-module>
+
+    <platform name="android">
+        <hook type="before_build" src="hooks/android/enableAndroidX.js" />
+        <hook type="before_plugin_install" src="hooks/android/add_tools_namespace.js" />
+        <hook type="before_plugin_install" src="hooks/android/ChangeSchema.js" />
+        <hook type="after_plugin_install" src="hooks/android/ReplaceAppid.js" />
+        <hook type="after_plugin_install" src="hooks/android/copySignDataJSON.js" />
+        <hook type="before_prepare" src="hooks/android/manifest-SingleInstance.js" />
+        <hook type="before_compile" src="hooks/android/manifest-SingleInstance.js" />
+
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="uaepass">
+                <param name="android-package" value="com.outsystems.uaepass.UAEPass" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="${host_success}" android:scheme="${scheme}" />
+                <data android:host="${host_failure}" android:scheme="${scheme}" />
+            </intent-filter>
+        </config-file>
+
+
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <queries>
+                <package android:name="ae.uaepass.mainapp" />
+                <package android:name="ae.uaepass.mainapp.qa" />
+                <package android:name="ae.uaepass.mainapp.stg" />
+            </queries>
+        </config-file>
+     
+              
+        <framework src="src/android/dependencies.gradle" custom="true" type="gradleReference" />
+        <!--<resource-file src="lib/android/libraryuaepass.aar" target="libs/libraryuaepass.aar"/>-->
+   	<!-- Add the AAR library -->
+   	<resource-file src="lib/android/libraryuaepass.aar" target="libs/libraryuaepass.aar" />
+	    
+	<resource-file src="src/signData.json" target="assets/signData.json" />
+        <source-file src="src/android/UAEPass.java" target-dir="src/com/outsystems/uaepass" />
+        <source-file src="src/android/UAEPassRequestModels.java" target-dir="src/com/outsystems/uaepass" />
+    </platform>
+    <platform name="ios">        
+        <hook type="after_plugin_install" src="hooks/ios/ChangeSchema.js" />
+        <hook type="before_build" src="scripts/ios/pod_install.js" />
+        <hook type="after_platform_add" src="scripts/ios/pod_install.js" />        
+        <hook type="after_plugin_install" src="hooks/ios/copySignDataJSON.js" />
+
+        <config-file parent="/*" target="config.xml">
+            <feature name="uaepass">
+                <param name="ios-package" value="UAEPass" />
+            </feature>
+        </config-file>
+    
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="NVActivityIndicatorView"/>
+            </pods>
+        </podspec>
+    
+        <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+            <array>
+                <string>uaepass</string>
+                <string>uaepassstg</string>
+                <string>uaepassqa</string>
+                <string>uaepassdev</string>
+            </array>
+        </config-file>
+            <config-file target="*-Info.plist" parent="NSAppTransportSecurity">
+                <dict>
+                    <key>NSAllowsArbitraryLoads</key>
+                    <true/>
+                </dict>
+        </config-file>
+     
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+            <array>
+                <dict>
+                    <key>CFBundleTypeRole</key>
+                    <string>Editor</string>
+                    <key>CFBundleURLName</key>
+                    <string>$HelloCordova</string>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>$HelloCordova</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+        
+        <dependency id="cordova-plugin-add-swift-support" version="2.0.2" />
+        <asset src="lib/ios/UAEPassClient" target="UAEPassClient" />
+        <resource-file src="signData.json" target="./signData.json" />        
+        <podspec src="lib/ios/UAEPassClient/UAEPassClient.podspec" />        
+        <header-file src="src/ios/UAEPass-Bridging-Header.h" />        
+        <source-file src="src/ios/Appdelegate+UAEPass.swift" />
+        <source-file src="src/ios/UAEPass.swift" />
+
+    </platform>
+</plugin>
