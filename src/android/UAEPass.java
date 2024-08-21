@@ -104,7 +104,8 @@ public class UAEPass extends CordovaPlugin {
         } else {
             cordova.getActivity().registerReceiver(downloadcompletedBR, filter);
         }
-        //cordova.getActivity().registerReceiver(downloadcompletedBR, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));    }
+        //cordova.getActivity().registerReceiver(downloadcompletedBR, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));   
+    }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
