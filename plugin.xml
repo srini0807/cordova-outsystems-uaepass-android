@@ -32,7 +32,16 @@
             </intent-filter>
         </config-file>
 
-
+	 <config-file target="AndroidManifest.xml" parent="/manifest/application">
+	        <meta-data
+	            android:name="onesignal_app_id"
+	            android:value=""
+	            tools:replace="android:value" />
+	        <meta-data
+	            android:name="onesignal_google_project_number"
+	            android:value="str:REMOTE"
+	            tools:replace="android:value" />
+	    </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
